@@ -1,0 +1,24 @@
+---
+# inventory:
+#   plugin: SimpleInventory
+#   options:
+#     host_file: "inventory/hosts.yaml"
+#     group_file: "inventory/groups.yaml"
+#     defaults_file: "inventory/defaults.yaml"
+
+inventory:
+  plugin: ExcelInventory
+  options:
+    # excel_file: "inventory/inventory.xlsx"
+    excel_file: "inventory/inventory_unprotected.xlsx"
+
+runner:
+  plugin: threaded
+  options:
+    num_workers: 64
+
+logging:
+  enabled: True
+  level: INFO
+  log_file: nornir.log
+
