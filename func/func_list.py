@@ -14,6 +14,7 @@ from nornir.core.filter import F
 from nornir_utils.plugins.functions import print_result
 from tqdm import tqdm
 from progress.bar import Bar
+from prettytable import PrettyTable
 
 sys.path.append("")
 from lib import comm
@@ -201,8 +202,6 @@ def get_port_mac():
     # pbar.finish()
     # 处理表格数据
     bar = Bar('End of summer:', width=67, max=1, suffix = '%(index)d/%(max)d')
-    # time_str = datetime.date(datetime.now())
-    # time_str = str(time_str)
     time_str = datetime.now().strftime("%Y%m%d")
     file_path = generate_table + '\\' +  time_str + '_MAC地址表' + '.xlsx'
     file_path_for_search = generate_table + '\\' +  time_str + '_MAC地址表_SEARCH' + '.xlsx'
@@ -227,10 +226,8 @@ def search_mac():
     import pandas as pd
 
     # 需要先获取交换机的mac地址表，当天日期
-    # 读取Excel文件
-    # time_str = datetime.date(datetime.now())
-    # time_str = str(time_str)
     time_str = datetime.now().strftime("%Y%m%d")
+    # 读取Excel文件
     file_path_for_search = generate_table + '\\' +  time_str + '_MAC地址表_SEARCH' + '.xlsx'
     data = pd.read_excel(file_path_for_search)
     # 输入关键字
@@ -303,6 +300,15 @@ def save_conf():
     return hosts_list, failed_hosts_list
 
 
+# 10、显示设备清单
+def itemized_list():
+
+    tb = PrettyTable(['name', 'ip', 'platform', 'model', 'device_type', 'area', 'location', 'version', 'sn'])
+    for n, h in nr.inventory.hosts.items():
+        tb.add_row([n, h.hostname, h.platform, h.data['model'], h.data['device_type'], h.data['area'], h.data['location'], h.data['version'], h.data['sn']])
+    print(tb)
+
+
 # 0、退出
 def goodbye():
     exit()
@@ -325,6 +331,7 @@ func_dic = {
     '7': ssh_reliable,
     '8': icmp_reliable,
     '9': save_conf,
+    '10': itemized_list,
     '0': goodbye,
 }
 
@@ -343,6 +350,7 @@ def run():
         7、批量ssh可达性测试
         8、批量ping可达性测试
         9、批量保存配置
+        10、查看设备清单
         0、退出
             '''.format(welcome_str))
         print('-' * 42)
