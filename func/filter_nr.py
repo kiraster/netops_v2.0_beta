@@ -16,7 +16,7 @@ from lib import filter_by
 # 1、IP地址-筛选
 def filter_by_ip():
     nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
-    comtent = input('输入格式：[192.168.1.1、192.168.1.0/24、192.168.1.1-192.168.1.254]：').strip()
+    comtent = input('输入格式：[192.168.1.1,192.168.1.0/24,192.168.1.1-192.168.1.254]：').strip()
     res = filter_by.filter_by_ip(comtent)
     if isinstance(res,list):
         def ip_filter(host):
@@ -27,6 +27,7 @@ def filter_by_ip():
         return nr  
 
     else:
+        print('It is impossible')
         nr = nr.filter(hostname=comtent)
         return nr
 
