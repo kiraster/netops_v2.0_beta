@@ -4,10 +4,13 @@
 import sys
 import os
 from os import system
-import subprocess
+# import subprocess
 import getpass
 
-import win32com.client
+# import win32com.client
+import msoffcrypto
+import io
+import pandas as pd
 from termcolor import colored
 
 from lib import comm
@@ -20,20 +23,41 @@ def unlock_xlsx():
     retries_n = 0
     while retries_n < 3:
         try:
+            # windows platform
             # password retry 
+            # password = getpass.getpass('输入密码：')
+            # # 定义inventory路径
+            # original_file_path = BASE_PATH + "\\inventory\\inventory_protected.xlsx"
+            # target_file_path = BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
+            # # 创建 Excel 应用程序对象
+            # excel = win32com.client.Dispatch("Excel.Application")
+            # # 打开需要解锁的 Excel 文件，输入密码
+            # workbook = excel.Workbooks.Open(original_file_path, False, True, None, password)
+            # # 另存为无密码文件
+            # workbook.SaveAs(target_file_path, None, "", "")
+            # # 关闭工作簿和 Excel 应用程序
+            # workbook.Close(False)
+            # excel.Quit()
+            # os.system(f"python {BASE_PATH}/func/func_list.py")
+            # # subprocess.Popen(['python', ' netops_start.py'])
+            # sys.exit()
+
+            # ubuntu 22.04 env
+            # password retry
             password = getpass.getpass('输入密码：')
             # 定义inventory路径
             original_file_path = BASE_PATH + "\\inventory\\inventory_protected.xlsx"
             target_file_path = BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
-            # 创建 Excel 应用程序对象
-            excel = win32com.client.Dispatch("Excel.Application")
-            # 打开需要解锁的 Excel 文件，输入密码
-            workbook = excel.Workbooks.Open(original_file_path, False, True, None, password)
-            # 另存为无密码文件
-            workbook.SaveAs(target_file_path, None, "", "")
-            # 关闭工作簿和 Excel 应用程序
-            workbook.Close(False)
-            excel.Quit()
+
+            decrypted = io.BytesIO()
+
+            with open(original_file_path, "rb") as f:
+                file = msoffcrypto.OfficeFile(f)
+                file.load_key(password=password)  # Use password
+                file.decrypt(decrypted)
+
+            df = pd.read_excel(decrypted)
+            df.to_excel(target_file_path, index=False)
             os.system(f"python {BASE_PATH}/func/func_list.py")
             # subprocess.Popen(['python', ' netops_start.py'])
             sys.exit()
