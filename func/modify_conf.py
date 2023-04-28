@@ -27,7 +27,8 @@ def modify_conf(task, pbar):
         config_res = task.run(task=netmiko_send_config, config_commands=cmds, severity_level=logging.DEBUG)
         # task.host.connections['netmiko']
         output += config_res[0].result
-        filepath = config_path + '\\' + '{}_{}_{}.txt'.format(name, ip, time_str)
+        # filepath = config_path + '\\' + '{}_{}_{}.txt'.format(name, ip, time_str)
+        filepath = config_path + '/{}_{}_{}.txt'.format(name, ip, time_str)
         config_res_write = task.run(task=write_file,
                                     filename=filepath,
                                     content=output,
