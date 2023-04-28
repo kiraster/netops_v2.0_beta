@@ -29,7 +29,9 @@ def export_conf(task, pbar):
                                    command_string=cmd,
                                    severity_level=logging.DEBUG)
             output += display_res[0].result
-            filepath = backup_path + '\\' + '{}_{}_{}.txt'.format(
+            # filepath = backup_path + '\\' + '{}_{}_{}.txt'.format(
+            #     name, ip, time_str)
+            filepath = backup_path + '/{}_{}_{}.txt'.format(
                 name, ip, time_str)
         display_res_write = task.run(task=write_file,
                                      filename=filepath,

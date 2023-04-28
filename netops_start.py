@@ -46,8 +46,10 @@ def unlock_xlsx():
             # password retry
             password = getpass.getpass('输入密码：')
             # 定义inventory路径
-            original_file_path = BASE_PATH + "\\inventory\\inventory_protected.xlsx"
-            target_file_path = BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
+            # original_file_path = BASE_PATH + "\\inventory\\inventory_protected.xlsx"
+            # target_file_path = BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
+            original_file_path = BASE_PATH + "/inventory/inventory_protected.xlsx"
+            target_file_path = BASE_PATH + "/inventory/inventory_unprotected.xlsx"
 
             decrypted = io.BytesIO()
 
@@ -71,7 +73,8 @@ def unlock_xlsx():
 # 确认无保护密码的inventory.xlsx文件已生成
 def StartedTheEngine():
 
-    exists_xlsx = '%s\\inventory\\inventory_unprotected.xlsx' % (BASE_PATH)
+    # exists_xlsx = '%s\\inventory\\inventory_unprotected.xlsx' % (BASE_PATH)
+    exists_xlsx = '%s/inventory/inventory_unprotected.xlsx' % (BASE_PATH)
     if os.path.exists(exists_xlsx):
         os.system(f"python {BASE_PATH}/func/func_list.py")
         # subprocess.Popen(['python', 'netops_start.py'])
@@ -82,7 +85,7 @@ def StartedTheEngine():
         unlock_xlsx()
 
 
-system("title Python-NetOps_2.0_beta")
+# system("title Python-NetOps_2.0_beta")
 
 # 开始执行
 if __name__ == "__main__":
