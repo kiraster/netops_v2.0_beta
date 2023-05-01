@@ -2,6 +2,12 @@
 
 一个使用`nornir`框架编写的跑脚本工具
 
+`main`分支是在windows平台下运行的脚本
+
+`ubuntu-branch`分支是在ubuntu server下运行的脚本（其他linux发行版，应该也可以）
+
+两个分支主要区别是路径的斜杠符号
+
 更多详细介绍，移步Blog：https://kiraster.github.io/posts/9571d5ee.html
 
 ## 功能
@@ -136,3 +142,13 @@
 
 1. 使用msoffcrypto库替换pywin32库，因为这个pywin32只能windows平台使用
 2. 过些天会传一份在ubuntu server环境下的代码修改版到一个分支
+
+## 20230429 ubuntu-branch 分支
+
+1. 添加ubuntu-branch 分支
+2. 该分支在ubuntu server 22.04 系统下进行测试
+
+## 20230501 修改 result_xxx.log 生成文件的title包含任务描述
+
+1. 修改/func/func_list.py，增加替换返回task_desc
+2. 修改/lib/comm.py，修改装饰器对应的代码接收处理task_desc
