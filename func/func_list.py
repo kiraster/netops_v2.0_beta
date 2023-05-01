@@ -26,7 +26,8 @@ welcome_str = '`LIFE IS A FUCKING MOVIE`'
 backup_path, config_path, generate_table, BASE_PATH, EXPORT_PATH, dir_name = comm.create_path()
 
 # 初始化创建一个 Nornir 对象
-nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
+# nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
+nr = InitNornir(config_file=BASE_PATH + "/nornir.yaml")
 
 
 # 1、批量备份配置
@@ -211,8 +212,10 @@ def get_port_mac():
     # 处理表格数据
     bar = Bar('End of summer:', width=67, max=1, suffix = '%(index)d/%(max)d')
     time_str = datetime.now().strftime("%Y%m%d")
-    file_path = generate_table + '\\' +  time_str + '_MAC地址表' + '.xlsx'
-    file_path_for_search = generate_table + '\\' +  time_str + '_MAC地址表_SEARCH' + '.xlsx'
+    # file_path = generate_table + '\\' +  time_str + '_MAC地址表' + '.xlsx'
+    # file_path_for_search = generate_table + '\\' +  time_str + '_MAC地址表_SEARCH' + '.xlsx'
+    file_path = generate_table + '/' +  time_str + '_MAC地址表' + '.xlsx'
+    file_path_for_search = generate_table + '/' +  time_str + '_MAC地址表_SEARCH' + '.xlsx'
     comm.concat_dataframe(results, file_path, file_path_for_search)
     bar.next()
     bar.finish()
@@ -236,7 +239,8 @@ def search_mac():
     # 需要先获取交换机的mac地址表，当天日期
     time_str = datetime.now().strftime("%Y%m%d")
     # 读取Excel文件
-    file_path_for_search = generate_table + '\\' +  time_str + '_MAC地址表_SEARCH' + '.xlsx'
+    # file_path_for_search = generate_table + '\\' +  time_str + '_MAC地址表_SEARCH' + '.xlsx'
+    file_path_for_search = generate_table + '/' +  time_str + '_MAC地址表_SEARCH' + '.xlsx'
     data = pd.read_excel(file_path_for_search)
     # 输入关键字
     keyword = input('Please enter the mac-address you want to search: ')
@@ -327,7 +331,12 @@ def goodbye():
 # 程序退出时自动清除inventory_unprotected.xlsx文件
 # @atexit.register
 # def del_unprotected_xlsx():
+<<<<<<< HEAD
 #     target_file_path = BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
+=======
+#     # target_file_path = BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
+#     target_file_path = BASE_PATH + "/inventory/inventory_unprotected.xlsx"
+>>>>>>> b78f620077e8ef93f41da4ee2d2522d16344e23e
 #     # 以下操作是直接删除，不是移动到回收站
 #     os.remove(target_file_path)
     
@@ -372,7 +381,7 @@ def run():
         func_dic.get(choice)()
 
 
-system("title Python-NetOps_2.0_beta")
+# system("title Python-NetOps_2.0_beta")
 
 # 开始执行
 if __name__ == "__main__":
