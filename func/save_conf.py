@@ -11,7 +11,8 @@ from func_list import config_path
 def save_res_write(task, name, ip, time_str, save_res):
 
     output = save_res[0].result
-    filepath = config_path + '\\' + '{}_{}_{}.txt'.format(name, ip, time_str)
+    # filepath = config_path + '\\' + '{}_{}_{}.txt'.format(name, ip, time_str)
+    filepath = config_path + '/{}_{}_{}.txt'.format(name, ip, time_str)
     task.run(task=write_file, filename=filepath, content=output, severity_level=logging.DEBUG)
     return output
 

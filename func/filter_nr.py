@@ -15,7 +15,8 @@ from lib import filter_by
 
 # 1、IP地址-筛选
 def filter_by_ip():
-    nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
+    # nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
+    nr = InitNornir(config_file=BASE_PATH + "/nornir.yaml")
     comtent = input('输入格式：[192.168.1.1,192.168.1.0/24,192.168.1.1-192.168.1.254]：').strip()
     res = filter_by.filter_by_ip(comtent)
     if isinstance(res,list):
@@ -34,7 +35,8 @@ def filter_by_ip():
   
 # 2、平台-筛选
 def filter_by_platform():
-    nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
+    # nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
+    nr = InitNornir(config_file=BASE_PATH + "/nornir.yaml")
     comtent = input('输入平台：').strip()
     nr = nr.filter(platform=comtent)
     return nr
@@ -42,7 +44,8 @@ def filter_by_platform():
 
 # 3、设备型号-筛选
 def filter_by_model():
-    nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
+    # nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
+    nr = InitNornir(config_file=BASE_PATH + "/nornir.yaml")
     comtent = input('输入设备型号：').strip()
     nr = nr.filter(model=comtent)
     return nr
@@ -50,7 +53,8 @@ def filter_by_model():
 
 # 4、区域-筛选
 def filter_by_area():
-    nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
+    # nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
+    nr = InitNornir(config_file=BASE_PATH + "/nornir.yaml")
     comtent = input('输入区域：').strip()
     nr = nr.filter(area=comtent)
     return nr
