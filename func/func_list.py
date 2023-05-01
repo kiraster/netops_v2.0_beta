@@ -44,14 +44,15 @@ def export_conf():
 
     import export_conf
 
-    results = nr.run(task=export_conf.export_conf, pbar=pbar, name='TASK: Export Configuration Of Device', on_failed=True)
+    task_desc = 'TASK: Export Configuration Of Device'
+    results = nr.run(task=export_conf.export_conf, pbar=pbar, name=task_desc, on_failed=True)
     pbar.close()
     # Nornir task 任务执行失败的主机
     failed_hosts = list(results.failed_hosts.keys())
     # 生成用于统计主机的列表，统计并打印在任务结束末尾
     hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
     print_result(results)
-    return hosts_list, failed_hosts_list
+    return hosts_list, failed_hosts_list, task_desc
 
 
 # 2、批量修改配置
@@ -65,13 +66,14 @@ def modify_conf():
 
     import modify_conf
 
-    results = nr.run(task=modify_conf.modify_conf, pbar=pbar, name='TASK: Modify Configuration Of Device', on_failed=True)
+    task_desc = 'TASK: Modify Configuration Of Device'
+    results = nr.run(task=modify_conf.modify_conf, pbar=pbar, name=task_desc, on_failed=True)
     pbar.close()
     # Nornir task 任务执行失败的主机
     failed_hosts = list(results.failed_hosts.keys())
     hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
     print_result(results)
-    return hosts_list, failed_hosts_list
+    return hosts_list, failed_hosts_list, task_desc
 
 
 # 3、筛选-->>执行 批量任务
@@ -111,13 +113,14 @@ def filter_run():
 
             import export_conf
 
-            results = nr.run(task=export_conf.export_conf, pbar=pbar, name='TASK: Export Configuration Of Device', on_failed=True)
+            task_desc = 'TASK: Export Configuration Of Device'
+            results = nr.run(task=export_conf.export_conf, pbar=pbar, name=task_desc, on_failed=True)
             pbar.close()
             # Nornir task 任务执行失败的主机
             failed_hosts = list(results.failed_hosts.keys())
             hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
             print_result(results)
-            return hosts_list, failed_hosts_list
+            return hosts_list, failed_hosts_list, task_desc
 
         if choice == '2':
             # 2、修改配置
@@ -126,13 +129,14 @@ def filter_run():
 
             import modify_conf
 
-            results = nr.run(task=modify_conf.modify_conf, pbar=pbar, name='TASK: Modify Configuration Of Device', on_failed=True)
+            task_desc = 'TASK: Modify Configuration Of Device'
+            results = nr.run(task=modify_conf.modify_conf, pbar=pbar, name=task_desc, on_failed=True)
             pbar.close()
             # Nornir task 任务执行失败的主机
             failed_hosts = list(results.failed_hosts.keys())
             hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
             print_result(results)
-            return hosts_list, failed_hosts_list
+            return hosts_list, failed_hosts_list, task_desc
 
         if choice == '3':
             # 3、ssh测试
@@ -142,14 +146,15 @@ def filter_run():
 
             import ssh_reliable
 
-            results = nr.run(task=ssh_reliable.ssh_test, pbar=pbar, name='TASK: SSH Reachability Detection', on_failed=True)
+            task_desc = 'TASK: SSH Reachability Detection'
+            results = nr.run(task=ssh_reliable.ssh_test, pbar=pbar, name=task_desc, on_failed=True)
             pbar.close()
             # pbar.finish()
             # Nornir task 任务执行失败的主机
             failed_hosts = list(results.failed_hosts.keys())
             hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
             print_result(results)
-            return hosts_list, failed_hosts_list
+            return hosts_list, failed_hosts_list, task_desc
 
         if choice == '4':
             # 4、ping测试
@@ -158,13 +163,14 @@ def filter_run():
 
             import icmp_reliable
 
-            results = nr.run(task=icmp_reliable.ping_test, pbar=pbar, name='TASK: Ping Reachability Detection')
+            task_desc = 'TASK: Ping Reachability Detection'
+            results = nr.run(task=icmp_reliable.ping_test, pbar=pbar, name=task_desc)
             pbar.close()
             # Nornir task 任务执行失败的主机
             failed_hosts = list(results.failed_hosts.keys())
             hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
             print_result(results)
-            return hosts_list, failed_hosts_list
+            return hosts_list, failed_hosts_list, task_desc
 
         if choice == '5':
             # 5、保存配置
@@ -173,13 +179,14 @@ def filter_run():
 
             import save_conf
 
-            results = nr.run(task=save_conf.save_conf, pbar=pbar, name='TASK:  Save Configuration')
+            task_desc = 'TASK:  Save Configuration'
+            results = nr.run(task=save_conf.save_conf, pbar=pbar, name=task_desc)
             pbar.close()
             # Nornir task 任务执行失败的主机
             failed_hosts = list(results.failed_hosts.keys())
             hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
             print_result(results)
-            return hosts_list, failed_hosts_list
+            return hosts_list, failed_hosts_list, task_desc
 
 
 # 4、获取交换机 端口-MAC地址 对应表
@@ -197,7 +204,8 @@ def get_port_mac():
 
     import get_port_mac
 
-    results = nr.run(task=get_port_mac.get_port_mac, pbar=pbar, name='TASK: Get Port-MAC Table', on_failed=True)
+    task_desc = 'TASK: Get Port-MAC Table'
+    results = nr.run(task=get_port_mac.get_port_mac, pbar=pbar, name=task_desc, on_failed=True)
     pbar.close()
     # pbar.finish()
     # 处理表格数据
@@ -215,7 +223,7 @@ def get_port_mac():
     hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
     # print_result 无法对返回的DataFrame进行处理，使用print_result会提示错误：ValueError: The truth value of a DataFrame is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
     # print_result(results)
-    return hosts_list, failed_hosts_list
+    return hosts_list, failed_hosts_list, task_desc
 
 # 5、根据输入的MAC地址查询对应设备
 @comm.timer
@@ -250,14 +258,15 @@ def ssh_reliable():
 
     import ssh_reliable
 
-    results = nr.run(task=ssh_reliable.ssh_test, pbar=pbar, name='TASK: SSH Reachability Detection', on_failed=True)
+    task_desc = 'TASK: SSH Reachability Detection'
+    results = nr.run(task=ssh_reliable.ssh_test, pbar=pbar, name=task_desc, on_failed=True)
     pbar.close()
     # pbar.finish()
     # Nornir task 任务执行失败的主机
     failed_hosts = list(results.failed_hosts.keys())
     hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
     print_result(results)
-    return hosts_list, failed_hosts_list
+    return hosts_list, failed_hosts_list, task_desc
 
 
 # 8、批量ping可达性测试
@@ -271,13 +280,14 @@ def icmp_reliable():
 
     import icmp_reliable
 
-    results = nr.run(task=icmp_reliable.ping_test, pbar=pbar, name='TASK: Ping Reachability Detection', on_failed=True)
+    task_desc = 'TASK: Ping Reachability Detection'
+    results = nr.run(task=icmp_reliable.ping_test, pbar=pbar, name=task_desc, on_failed=True)
     pbar.close()
     # Nornir task 任务执行失败的主机
     failed_hosts = list(results.failed_hosts.keys())
     hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
     print_result(results)
-    return hosts_list, failed_hosts_list
+    return hosts_list, failed_hosts_list, task_desc
 
 
 # 9、保存配置
@@ -291,13 +301,14 @@ def save_conf():
 
     import save_conf
 
-    results = nr.run(task=save_conf.save_conf, pbar=pbar, name='TASK: Save Configuration', on_failed=True)
+    task_desc = 'TASK: Save Configuration'
+    results = nr.run(task=save_conf.save_conf, pbar=pbar, name=task_desc, on_failed=True)
     pbar.close()
     # Nornir task 任务执行失败的主机
     failed_hosts = list(results.failed_hosts.keys())
     hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
     print_result(results)
-    return hosts_list, failed_hosts_list
+    return hosts_list, failed_hosts_list, task_desc
 
 
 # 10、显示设备清单
@@ -314,11 +325,11 @@ def goodbye():
     exit()
 
 # 程序退出时自动清除inventory_unprotected.xlsx文件
-@atexit.register
-def del_unprotected_xlsx():
-    target_file_path = BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
-    # 以下操作是直接删除，不是移动到回收站
-    os.remove(target_file_path)
+# @atexit.register
+# def del_unprotected_xlsx():
+#     target_file_path = BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
+#     # 以下操作是直接删除，不是移动到回收站
+#     os.remove(target_file_path)
     
 
 # 创建函数功能字典
