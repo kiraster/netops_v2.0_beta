@@ -5,8 +5,8 @@ import os
 import time
 from datetime import datetime
 from functools import wraps
-import ipaddress
-from tqdm import tqdm
+# import ipaddress
+# from tqdm import tqdm
 import pandas as pd
 import openpyxl
 from openpyxl import load_workbook
