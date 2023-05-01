@@ -70,14 +70,14 @@ def result_count(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        hosts, failed_hosts = func(*args, **kwargs)
+        hosts, failed_hosts, task_desc = func(*args, **kwargs)
         print('-' * 42)
         print('\n设备总数 {} 台，成功 {} 台，失败 {} 台.'.format(
             len(hosts),
             len(hosts) - len(failed_hosts), len(failed_hosts)))
         print(f'\nFailed_hosts list see in : \"{EXPORT_PATH}\\{dir_name}\\result_{dir_name}.log\"\n\nLogfile see in : \"{BASE_PATH}\\nornir.log\"')
 
-        return hosts, failed_hosts
+        return hosts, failed_hosts, task_desc
 
     return wrapper
 
@@ -88,7 +88,7 @@ def result_write(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        hosts, failed_hosts = func(*args, **kwargs)
+        hosts, failed_hosts, task_desc = func(*args, **kwargs)
         result_count = ('设备总数 {} 台，成功 {} 台，失败 {} 台.'.format(
             len(hosts),
             len(hosts) - len(failed_hosts), len(failed_hosts)))
@@ -97,9 +97,10 @@ def result_write(func):
         success_hosts = list(set(hosts) - set(failed_hosts))
 
         global time_str
-        time_str = datetime.now()
+        # time_str = datetime.now()
+        time_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
         with open(os.path.join(EXPORT_PATH + '\\' + dir_name + '\\', f'result_{dir_name}.log'), 'a', encoding="utf-8") as f:
-            log_title = '=' * 100 + '\n' + '=' * 37 + '{}'.format(time_str) + '=' * 37 + '\n'
+            log_title = task_desc.center(100, '=') + '\n' + time_str.center(100, '=') + '\n'
             f.write(log_title)
             f.write(result_count + '\n')
             f.write('\n执行成功设备列表：\n')
@@ -112,7 +113,7 @@ def result_write(func):
                 # f.write('\n')
             f.write('\n')
 
-        return hosts, failed_hosts
+        return hosts, failed_hosts, task_desc
 
     return wrapper
 
