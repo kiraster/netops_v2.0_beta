@@ -68,7 +68,7 @@ def filter_by_adv():
     comtent = input('F对象（~取反 ），& 和 | 执行 AND 和 OR 运算组合筛选：').strip()
     # F(hostname='172.31.100.20') | F(area='JCW')
     nr = eval(f'nr.filter({comtent})')
-    print(nr.inventory.hosts.keys())
+    # print(nr.inventory.hosts.keys())
     return nr
 
 
