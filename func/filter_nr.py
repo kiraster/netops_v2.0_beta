@@ -4,6 +4,7 @@
 import sys
 
 from nornir import InitNornir
+from nornir.core.filter import F
 
 from func_list import BASE_PATH
 
@@ -58,7 +59,12 @@ def filter_by_area():
 
 # 5、组合筛选（高级）
 def filter_by_adv():
-    pass
+    nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
+    comtent = input('F对象（~取反 ），& 和 | 执行 AND 和 OR 运算组合筛选：').strip()
+    # F(hostname='172.31.100.20') | F(area='JCW')
+    nr = eval(f'nr.filter({comtent})')
+    # print(nr.inventory.hosts.keys())
+    return nr
 
 
 # 0、退出

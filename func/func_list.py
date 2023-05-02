@@ -325,11 +325,11 @@ def goodbye():
     exit()
 
 # 程序退出时自动清除inventory_unprotected.xlsx文件
-# @atexit.register
-# def del_unprotected_xlsx():
-#     target_file_path = BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
-#     # 以下操作是直接删除，不是移动到回收站
-#     os.remove(target_file_path)
+@atexit.register
+def del_unprotected_xlsx():
+    target_file_path = BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
+    # 以下操作是直接删除，不是移动到回收站
+    os.remove(target_file_path)
     
 
 # 创建函数功能字典
