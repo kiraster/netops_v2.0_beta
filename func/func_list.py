@@ -1,11 +1,11 @@
 '''
 程序入口
 '''
-from os import system
+# from os import system
 from datetime import datetime
 import os
 import sys
-import logging
+# import logging
 import atexit
 
 from nornir import InitNornir
@@ -376,8 +376,6 @@ def run():
             continue
         func_dic.get(choice)()
 
-
-# system("title Python-NetOps_2.0_beta")
 
 # 开始执行
 if __name__ == "__main__":

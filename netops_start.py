@@ -24,7 +24,7 @@ def unlock_xlsx():
     while retries_n < 3:
         try:
             # windows platform
-            # password retry 
+            # password retry
             # password = getpass.getpass('输入密码：')
             # # 定义inventory路径
             # original_file_path = BASE_PATH + "\\inventory\\inventory_protected.xlsx"
@@ -84,8 +84,6 @@ def StartedTheEngine():
         print(colored('没有已解锁的inventory文件，先解锁', 'blue'))
         unlock_xlsx()
 
-
-# system("title Python-NetOps_2.0_beta")
 
 # 开始执行
 if __name__ == "__main__":
