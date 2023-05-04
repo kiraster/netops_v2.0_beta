@@ -23,14 +23,14 @@ def export_conf(task, pbar):
         time_str = datetime.now().strftime("%H%M")
         output = ''
         for cmd in cmds:
-            output += '=' * 100 + '\n' + '=' * 33 + '{}'.format(
-                cmd) + '=' * 33 + '\n'
+            output += '=' * 100 + '\n' + cmd.center(100, '=') + '\n'
             display_res = task.run(task=netmiko_send_command,
                                    command_string=cmd,
                                    severity_level=logging.DEBUG)
             output += display_res[0].result
             filepath = backup_path + '\\' + '{}_{}_{}.txt'.format(
                 name, ip, time_str)
+
         display_res_write = task.run(task=write_file,
                                      filename=filepath,
                                      content=output,
@@ -39,6 +39,7 @@ def export_conf(task, pbar):
         pbar.update()
         return Result(host=task.host, result='File saved: {}'.format(filepath))
 
-    except Exception:
+    except Exception as e:
+        # print(e)
         pbar.update()
         return Result(host=task.host, result='备份失败：设备：{}，IP：{}'.format(name, ip), failed=True)
