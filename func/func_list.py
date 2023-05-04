@@ -208,15 +208,19 @@ def get_port_mac():
     results = nr.run(task=get_port_mac.get_port_mac, pbar=pbar, name=task_desc, on_failed=True)
     pbar.close()
     # pbar.finish()
+    
     # 处理表格数据
     bar = Bar('End of summer:', width=67, max=1, suffix = '%(index)d/%(max)d')
-    time_str = datetime.now().strftime("%Y%m%d")
-    file_path = generate_table + '\\' +  time_str + '_MAC地址表' + '.xlsx'
-    file_path_for_search = generate_table + '\\' +  time_str + '_MAC地址表_SEARCH' + '.xlsx'
-    comm.concat_dataframe(results, file_path, file_path_for_search)
+    time_str = datetime.now().strftime('%Y%m%d_%H%M%S')
+
+    # 声明全局变量mac_file_path，用于 5、根据输入的MAC地址查询对应设备 中载入文件路径
+    global mac_file_path
+
+    mac_file_path = generate_table + '\\' +  time_str + '_MAC地址表' + '.xlsx'
+    comm.concat_dataframe(results, mac_file_path)
     bar.next()
     bar.finish()
-    print(f'File saved: {file_path}')
+    print(f'File saved: {mac_file_path}')
 
     # Nornir task 任务执行失败的主机
     failed_hosts = list(results.failed_hosts.keys())
@@ -236,14 +240,49 @@ def search_mac():
     # 需要先获取交换机的mac地址表，当天日期
     time_str = datetime.now().strftime("%Y%m%d")
     # 读取Excel文件
-    file_path_for_search = generate_table + '\\' +  time_str + '_MAC地址表_SEARCH' + '.xlsx'
-    data = pd.read_excel(file_path_for_search)
+    # mac_file_path = generate_table + '\\' +  time_str + '_MAC地址表' + '.xlsx'
+    data = comm.split_cells(mac_file_path)
     # 输入关键字
-    keyword = input('Please enter the mac-address you want to search: ')
+    keyword = input('Please enter the mac-address you want to search: ').strip()
     # 根据关键字筛选行
     result = data[data['macaddress'].str.contains(keyword, na=False)]
     # 输出结果
     print(result)
+
+# 6、根据代码内置OID对设备进行snmp轮询
+@comm.timer
+@comm.result_count
+@comm.result_write
+def snmp_polling():
+
+    # nr = InitNornir(config_file="nornir.yaml")
+    # nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
+    pbar = tqdm(total=len(nr.inventory.hosts), desc="Running tasks on devices", unit="device(s)", colour='green')
+    # pbar = Bar('Processing', width=67, max=len(nr.inventory.hosts), suffix='%(index)d/%(max)d' + '\t' + '%(percent)d%%')
+
+    import snmp_polling
+
+    task_desc = 'TASK: Do SNMP Polling'
+    results = nr.run(task=snmp_polling.task_polling, pbar=pbar, name=task_desc, on_failed=True)
+    pbar.close()
+    # pbar.finish()
+
+    # 处理表格数据
+    bar = Bar('End of summer:', width=67, max=1, suffix = '%(index)d/%(max)d')
+    # time_str = datetime.now().strftime("%Y%m%d")
+    time_str = datetime.now().strftime('%Y%m%d_%H%M%S')
+    file_path = generate_table + '\\' +  time_str + '_SNMP轮询结果表' + '.xlsx'
+    comm.concat_dataframe(results, file_path)
+    bar.next()
+    bar.finish()
+    print(f'File saved: {file_path}')
+
+    # Nornir task 任务执行失败的主机
+    failed_hosts = list(results.failed_hosts.keys())
+    hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
+    # print_result 无法对返回的DataFrame进行处理，使用print_result会提示错误：ValueError: The truth value of a DataFrame is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
+    # print_result(results)
+    return hosts_list, failed_hosts_list, task_desc
 
 
 # 7、批量ssh可达性测试
@@ -339,6 +378,7 @@ func_dic = {
     '3': filter_run,
     '4': get_port_mac,
     '5': search_mac,
+    '6': snmp_polling,
     '7': ssh_reliable,
     '8': icmp_reliable,
     '9': save_conf,
@@ -358,6 +398,7 @@ def run():
         3、筛选-->执行
         4、获取交换机 端口-MAC地址
         5、搜索MAC地址对应设备
+        6、批量snmp轮询
         7、批量ssh可达性测试
         8、批量ping可达性测试
         9、批量保存配置

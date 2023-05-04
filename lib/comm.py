@@ -213,7 +213,7 @@ def excel_style(file_path):
 
 
 # 处理DataFrame，根据results聚合结果中的result内容 组合成一整个DataFrame 写入表格
-def concat_dataframe(results, file_path, file_path_for_search):
+def concat_dataframe(results, file_path):
     # 定义一个列表装 DataFrame，每个DataFrame是一台设备上的mac地址表
     df_list = []
     try:
@@ -228,10 +228,25 @@ def concat_dataframe(results, file_path, file_path_for_search):
         df_all = pd.concat(df_list)
         # 写入表格
         df_all.to_excel(file_path, index=False)
-        df_all.to_excel(file_path_for_search, index=False)
 
         # 表格样式修改
         excel_style(file_path)
 
     except Exception as e:
         print(f'有错误：{e}')
+
+
+# 对第一列中已合并的单元格拆分，拆分后的单元格数据与拆分前相同
+def split_cells(file_path):
+
+    # 读取 Excel 表格
+    df = pd.read_excel(file_path)
+
+    # 获取第一列的列名
+    col_name = df.columns[0]
+
+    # 拆分第一列的合并单元格
+    df[col_name] = df[col_name].ffill()
+
+    # 返回DataFrame
+    return df
