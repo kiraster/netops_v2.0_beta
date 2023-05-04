@@ -13,9 +13,9 @@
 ## 功能
 
 1. 批量备份配置
-   - 根据加载的设备清单，读取ssh登陆信息登陆设备，执行display列中的display命令，将回显内容写入到`EXPORT\当天日期\export_conf`文件夹下，每个设备的回显内容分别记录在一个txt文件(格式：name + ip + 当前时间.txt)，运行结果记录在`EXPORT\当天日期\result_当前日期.log`文件
+   - 根据加载的设备清单，读取ssh登陆信息登陆设备，执行display列中的display命令，将回显内容写入到`EXPORT\当天日期\export_conf`文件夹下，每个设备的回显内容分别记录在一个txt文件(格式：name + ip + 当前时间.txt)，运行结果记录在`EXPORT\当天日期\result_当天日期.log`文件
 2. 批量修改配置
-   - 根据加载的设备清单，读取ssh登陆信息登陆设备，执行config列中的config命令，将回显内容写入到`EXPORT\当天日期\modify_conf`文件夹下，每个设备的回显内容分别记录在一个txt文件(格式：name + ip + 当前时间.txt)，运行结果记录在`EXPORT\当天日期\result_当前日期.log`文件
+   - 根据加载的设备清单，读取ssh登陆信息登陆设备，执行config列中的config命令，将回显内容写入到`EXPORT\当天日期\modify_conf`文件夹下，每个设备的回显内容分别记录在一个txt文件(格式：name + ip + 当前时间.txt)，运行结果记录在`EXPORT\当天日期\result_当天日期.log`文件
 3. 筛选-->执行
    - 选择该功能选项后，会在二级菜单显示主菜单中的1、2、6、7、8功能
    - 选择对应功能后进入筛选菜单
@@ -26,18 +26,21 @@
      -  区域-筛选
      -  组合筛选（未编写）
 4. 获取交换机 端口-MAC地址  
-   - 该功能通过获取交换机MAC地址表和trunk接口信息，求差集获取到非trunk接口的MAC地址表，表格文件存储到`EXPORT\当天日期\generate_table`，格式为：`当天日期_MAC地址表.xlsx`
+   - 该功能通过获取交换机MAC地址表和trunk接口信息，求差集获取到非trunk接口的MAC地址表，表格文件存储到`EXPORT\当天日期\generate_table`，格式为：`当天日期_当前时间_MAC地址表.xlsx`
    - 强烈建议在代码`task.run`前进行filter过滤接入交换机的`nr对象`
-   - 运行结果记录在`EXPORT\当天日期\result_当前日期.log`文件
+   - 运行结果记录在`EXPORT\当天日期\result_当天日期.log`文件
 5. 搜索MAC地址对应设备
    - 本功能依赖功能4中生成的MAC地址表，需要使用本功能先执行功能4
    - 输入的MAC地址格式任意，可以是全匹配如：4426-0f92-0d06，也可以是其中部分如：0d06 或 4426，或者任意字符（没有意义）
+6. 批量snmp轮询
+   - 根据加载的设备清单，执行snmp_get操作，将获取到的结果写入到SNMP轮询结果表，表格文件存储到`EXPORT\当天日期\generate_table`，格式为：`当天日期_当前时间_snmp轮询结果表.xlsx`
+   - 运行结果记录在`EXPORT\当天日期\result_当天日期.log`文件
 6. 批量ssh可达性测试
-   - 根据加载的设备清单，读取ssh登陆信息登陆设备，以获取到设备的`prompt`作为依据判断ssh可达，运行结果记录在`EXPORT\当天日期\result_当前日期.log`文件
+   - 根据加载的设备清单，读取ssh登陆信息登陆设备，以获取到设备的`prompt`作为依据判断ssh可达，运行结果记录在`EXPORT\当天日期\result_当天日期.log`文件
 7. 批量ping可达性测试
-   - 根据加载的设备清单，执行ping操作，以没有异常作为依据判断ping可达，运行结果记录在`EXPORT\当天日期\result_当前日期.log`文件
+   - 根据加载的设备清单，执行ping操作，以没有异常作为依据判断ping可达，运行结果记录在`EXPORT\当天日期\result_当天日期.log`文件
 8. 批量保存配置
-   - 根据加载的设备清单，执行`netmiko_save_config`操作，以没有异常作为依据判断保存成功，运行结果记录在`EXPORT\当天日期\result_当前日期.log`文件
+   - 根据加载的设备清单，执行`netmiko_save_config`操作，以没有异常作为依据判断保存成功，运行结果记录在`EXPORT\当天日期\result_当天日期.log`文件
 9. 显示设备清单
    - 根据加载的设备清单，列出['name', 'ip', 'platform', 'model', 'device_type', 'area', 'location', 'version', 'sn']等内容
 
@@ -73,9 +76,12 @@
     	同上
     4、ping测试
     	同上
+    5、保存配置
+      同上
     0、返回上一级
 4、获取交换机 端口-MAC地址
 5、搜索MAC地址对应设备
+6、批量snmp轮询
 7、批量ssh可达性测试
 8、批量ping可达性测试
 9、批量保存配置
