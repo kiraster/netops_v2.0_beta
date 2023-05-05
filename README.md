@@ -28,6 +28,10 @@
 - HCL 5.7.2
 - DeviceModel：H3C S5820V2-54QS-GE
 
+## Topology
+
+![lab_test](https://s2.loli.net/2023/05/05/L7nI9fTp3zEk6Rq.png)
+
 ## 功能
 
 1. 批量备份配置
@@ -65,15 +69,9 @@
 
 ## 说明：
 
-1. nornir 3.3.0
-
-2. 属于重构之前的netops，原版代码主要使用netmiko进行功能编写
-
-**重构原因**
-
-1. 摒弃旧版本自己写的异步并发和文件写入，使用`nornir`自带的并发机制，专注于功能的实现
+1. 在nornir 3.3.0框架上进行功能编写
+2. 使用`nornir`自带的并发机制，专注于功能的实现
 2. `nornir`具有与其他开源模块的联动功能，如`netbox`、`sql`、`scrapli`、`napalm`等，具有强扩展性
-3. 原有代码结构臃肿、难维护、设计不合理、功能杂乱
 
 ## 20230407 功能结构
 
@@ -139,13 +137,13 @@
 6. 能找到不带打开密码的文件，仅在生成该文件时，手动另存为
 
 
-## 20230412 添加自定义textfsm模板
+## 20230412 添加自定义textfsm 模板
 1. 在`venv\Lib\site-packages\ntc_templates\templates\index`文件里添加记录
 
 2. 添加`venv\Lib\site-packages\ntc_templates\templates\hp_comware_display_port_trunk_local.textfsm` 模板文件
 
 
-## 20230413 添加根据MAC地址搜索对应设备
+## 20230413 添加根据 MAC 地址搜索对应设备
 1. 要求先获取设备MAC地址表，当天日期
 
 2. 输入的MAC地址格式任意，可以是全匹配如：4426-0f92-0d06，也可以是其中部分如：0d06 或 4426，或者任意字符（没有意义）
@@ -184,7 +182,7 @@
 3. 举例：进入对应菜单后直接输入-->> F(hostname='172.31.100.20') | F(area='JCW') 等形式字符串
 4. 代码中使用eval()函数，带来一定的`麻烦`，后面想到解决办法再修改
 
-## 20230504 添加SNMP轮询和修改 功能4和功能5文件生成
+## 20230504 添加 SNMP 轮询和修改 功能 4 和功能 5 文件生成
 
 1. 新增 `6、批量snmp轮询`对设备进行内置OID（可在lib/do_polling.py文件修改）轮询
 2. 添加lib/do_polling.py文件，根据传入的IP地址和只读团体字（SNMPv2)对设备进行轮询，并返回字典给上一步的函数
