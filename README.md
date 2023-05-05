@@ -6,9 +6,27 @@
 
 `ubuntu-branch`分支是在ubuntu server下运行的脚本（其他linux发行版，应该也可以）
 
-两个分支主要区别是路径的斜杠符号
-
 更多详细介绍，移步Blog：https://kiraster.github.io/posts/9571d5ee.html
+
+## 测试环境
+
+### windows
+
+- Microsoft Windows 10 Pro 21H2
+- Visual studio code Update 1.77.3
+- Python 3.10.10
+- nornir==3.3.0
+
+### Ubuntu 
+
+- Ubuntu 22.04.2 LTS
+- Python 3.10.6
+- nornir==3.3.0
+
+### Simulation Software 
+
+- HCL 5.7.2
+- DeviceModel：H3C S5820V2-54QS-GE
 
 ## 功能
 
