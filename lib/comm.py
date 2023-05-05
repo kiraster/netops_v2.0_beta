@@ -142,31 +142,32 @@ def create_count_list(nr_obj, failed_hosts):
 
 
 # 判断是否是正确格式的IP地址，IP地址网络，IP地址范围
-# def is_valid_ipv4_input(ipv4_str):
+def is_valid_ipv4_input(ipv4_str):
 
-#     try:
-#         # 尝试将输入解析为 IPv4Address
-#         ipaddress.IPv4Address(ipv4_str)
-#         return True
-#     except ValueError:
-#         try:
-#             # 将输入拆分为两个 IP 地址
-#             start, end = ipv4_str.split('-')
-#             # 尝试将输入解析为 IPv4Address
-#             ipaddress.IPv4Address(start.strip())
-#             ipaddress.IPv4Address(end.strip())
-#             return True
-#         except ValueError as e:
-#             # 尝试将输入解析为 IPv4Network
-#             try:
-#                 network = ipaddress.IPv4Network(ipv4_str)
-#                 if network.hostmask != '0.0.0.0':
-#                     return True
-#                 else:
-#                     return False
-#             except ValueError as e:
-#                 # print(e)
-#                 return False
+    try:
+        # 尝试将输入解析为 IPv4Address
+        ipaddress.IPv4Address(ipv4_str)
+        return True
+    except ValueError:
+        return False
+        # try:
+        #     # 将输入拆分为两个 IP 地址
+        #     start, end = ipv4_str.split('-')
+        #     # 尝试将输入解析为 IPv4Address
+        #     ipaddress.IPv4Address(start.strip())
+        #     ipaddress.IPv4Address(end.strip())
+        #     return True
+        # except ValueError as e:
+        #     # 尝试将输入解析为 IPv4Network
+        #     try:
+        #         network = ipaddress.IPv4Network(ipv4_str)
+        #         if network.hostmask != '0.0.0.0':
+        #             return True
+        #         else:
+        #             return False
+        #     except ValueError as e:
+        #         # print(e)
+        #         return False
 
 
 # 合并第一列相同内容的单元格，居中
