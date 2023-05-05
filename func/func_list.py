@@ -14,7 +14,9 @@ from nornir.core.filter import F
 from nornir_utils.plugins.functions import print_result
 from tqdm import tqdm
 from progress.bar import Bar
+from progress.spinner import Spinner
 from prettytable import PrettyTable
+from termcolor import colored
 
 sys.path.append("")
 from lib import comm
@@ -359,6 +361,57 @@ def itemized_list():
     print(tb)
 
 
+# 11、导出诊断信息和日志
+@comm.timer
+@comm.result_count
+@comm.result_write
+def export_diagnostic_logfile():
+
+    # nr = InitNornir(config_file="nornir.yaml")
+    nr = InitNornir(config_file=BASE_PATH + "\\nornir.yaml")
+    # 输入TFTP服务端地址
+    # server_ip = input('输入TFTP服务端地址：').strip()
+    # 校验输入的IP地址格式
+    retry_times = 0
+    while retry_times < 3:
+        server_ip = input('输入TFTP服务端地址：').strip()
+        if comm.is_valid_ipv4_input(server_ip):
+            break
+        retry_times  += 1
+        if retry_times  == 3:
+            print(colored('-' * 42 + '\n>>>输错三次，重新再来<<<', 'red'))
+            run()
+
+    # 过滤设备--IP地址
+    # comtent = input('输入设备IP地址：').strip()
+    # 校验输入的IP地址格式
+    retry_times = 0
+    while retry_times < 3:
+        device_ip = input('输入设备IP地址：').strip()
+        if comm.is_valid_ipv4_input(device_ip):
+            break
+        retry_times  += 1
+        if retry_times  == 3:
+            print(colored('-' * 42 + '\n>>>输错三次，重新再来<<<', 'red'))
+            run()
+
+    nr = nr.filter(hostname=device_ip)
+
+    pbar = tqdm(total=len(nr.inventory.hosts), desc="Running tasks on devices", unit="device(s)", colour='green')
+
+    import export_diagnostic
+
+    task_desc = 'TASK: Export Diagnostic And Logfile'
+    results = nr.run(task=export_diagnostic.export_info, server_ip=server_ip, pbar=pbar, name=task_desc, on_failed=True)
+    pbar.close()
+
+    # Nornir task 任务执行失败的主机
+    failed_hosts = list(results.failed_hosts.keys())
+    hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
+    print_result(results)
+    return hosts_list, failed_hosts_list, task_desc
+
+
 # 0、退出
 def goodbye():
     exit()
@@ -383,6 +436,7 @@ func_dic = {
     '8': icmp_reliable,
     '9': save_conf,
     '10': itemized_list,
+    '11': export_diagnostic_logfile,
     '0': goodbye,
 }
 
@@ -403,6 +457,7 @@ def run():
         8、批量ping可达性测试
         9、批量保存配置
         10、查看设备清单
+        11、导出诊断信息和日志（TFTP）
         0、退出
             '''.format(welcome_str))
         print('-' * 42)
