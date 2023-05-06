@@ -20,8 +20,8 @@ backup_path, config_path, generate_table, BASE_PATH, EXPORT_PATH, dir_name = com
 
 # 解锁带保护密码的inventory excel 文件
 def unlock_xlsx():
-    retries_n = 0
-    while retries_n < 3:
+    retry_times = 0
+    while retry_times < 3:
         try:
             # windows platform
             # password retry 
@@ -62,8 +62,8 @@ def unlock_xlsx():
             # subprocess.Popen(['python', ' netops_start.py'])
             sys.exit()
         except Exception:
-            retries_n += 1
-            if retries_n == 3:
+            retry_times += 1
+            if retry_times == 3:
                 print(colored('-' * 42 + '\n>>>输错三次，重新再来<<<', 'red'))
                 break
 
