@@ -199,7 +199,6 @@ def deal_with_sysname(pysnmp_dict):
             pysnmp_dict['net_area'] = ''
             pysnmp_dict['device_type'] = ''
             pysnmp_dict['device_location'] = ''
-            pass
         else:
             # 判断网络区域
             if split_data[-3] == 'JC':
