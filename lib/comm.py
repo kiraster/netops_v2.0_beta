@@ -209,6 +209,29 @@ def excel_style(file_path):
         for cell in row:
             cell.alignment = openpyxl.styles.Alignment(horizontal='center',vertical='center')
 
+    # 将所有表头单元格的值转换为大写
+    for cell in worksheet[1]:
+        cell.value = str(cell.value).upper()
+
+    # 迭代每个非空列并调整列宽
+    for column in worksheet.columns:
+        # 获取当前列名称
+        column_name = column[0].column_letter
+
+        # 计算此列中所有单元格中包含的最长文本
+        max_length = 0
+        for cell in column:
+            try:
+                cell_value = str(cell.value)
+                if len(cell_value) > max_length:
+                    max_length = len(cell_value)
+            except TypeError:
+                pass
+
+        # 根据最长文本设置列宽（添加 2 作为 buffer）
+        adjusted_width = max_length + 2
+        worksheet.column_dimensions[column_name].width = adjusted_width
+
     # 保存
     workbook.save(file_path)
 
