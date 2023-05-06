@@ -14,7 +14,6 @@ from nornir.core.filter import F
 from nornir_utils.plugins.functions import print_result
 from tqdm import tqdm
 from progress.bar import Bar
-from progress.spinner import Spinner
 from prettytable import PrettyTable
 from termcolor import colored
 
