@@ -160,13 +160,13 @@ def do_pysnmp(ip, community_data):
             # pysnmp_dict.setdefault('net_area','')
             # pysnmp_dict.setdefault('device_type','')
             # pysnmp_dict.setdefault('device_location','')
-            pysnmp_dict.setdefault('device_uptime','')
-            pysnmp_dict.setdefault('device_version','')
-            pysnmp_dict.setdefault('device_model','')
-            pysnmp_dict.setdefault('device_cpu','')
-            pysnmp_dict.setdefault('device_mem','')
-            pysnmp_dict.setdefault('device_power_state','')
-            pysnmp_dict.setdefault('device_fan_state','')
+            pysnmp_dict.setdefault('device_uptime', '')
+            pysnmp_dict.setdefault('device_version', '')
+            pysnmp_dict.setdefault('device_model', '')
+            pysnmp_dict.setdefault('device_cpu', '')
+            pysnmp_dict.setdefault('device_mem', '')
+            pysnmp_dict.setdefault('device_power_state', '')
+            pysnmp_dict.setdefault('device_fan_state', '')
 
             return pysnmp_dict
     except Exception as e:
@@ -243,7 +243,6 @@ def deal_with_sysname(pysnmp_dict):
             pysnmp_dict['net_area'] = net_area_data
             pysnmp_dict['device_type'] = device_type_data
             pysnmp_dict['device_location'] = device_location_data
-
 
     except Exception as e:
         # print(str(e) + pysnmp_dict['sysname'])

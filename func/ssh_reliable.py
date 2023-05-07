@@ -1,20 +1,14 @@
-import sys
-
 from nornir.core.task import Result
-# from netmiko import ConnectHandler
-
-import logging
 
 
 def ssh_test(task, pbar):
+    """
+    ssh登陆登陆设备，获取到设备的prompt作为依据判断ssh可达
+    """
 
-    # 获取资产中定义的信息，传参跑task
+    # 获取inventory中定义的信息
     name = task.host.name
     ip = task.host.hostname
-    # 控制台提示信息
-    # sys.stdout.write(f'\n正在ssh测试，设备：{ip}   ' + '\r')
-    # sys.stdout.flush()
-    cmds = task.host.get('config').split(',')
 
     try:
 
@@ -25,12 +19,12 @@ def ssh_test(task, pbar):
         output = '{:<18}SSH测试连接成功,获取到设备提示符： {}'.format(ip, hostname)
 
         pbar.update()
-        # pbar.next()
         return Result(host=task.host, result=output)
 
     except Exception as e:
         # SSH连接测试失败
         # raise Exception(e)
-        pbar.update()        
-        # pbar.next()
-        return Result(host=task.host, result='{:<18}SSH测试连接失败,未获取到设备提示符'.format(ip), failed=True)
+        pbar.update()
+        return Result(host=task.host,
+                      result='{:<18}SSH测试连接失败,未获取到设备提示符'.format(ip),
+                      failed=True)

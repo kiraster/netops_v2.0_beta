@@ -11,40 +11,28 @@ import pandas as pd
 import openpyxl
 from openpyxl import load_workbook
 
+# 项目根目录
+BASE_PATH = os.path.dirname(os.path.dirname(__file__))
 
-# 目录定义、文件名定义
-def create_path():
+# 文件输出目录
+EXPORT_PATH = os.path.join(BASE_PATH, 'EXPORT')
 
-    global BASE_PATH
-    global EXPORT_PATH
-    global dir_name
+# 定义目录名称为当天日期（格式：20220609）
+dir_name = datetime.now().strftime("%Y%m%d")
 
-    # 项目根目录
-    BASE_PATH = os.path.dirname(os.path.dirname(__file__))
-
-    # 文件输出目录
-    EXPORT_PATH = os.path.join(BASE_PATH, 'EXPORT')
-
-    # 定义目录名称为当天日期（格式：20220609）
-    dir_name = datetime.now().strftime("%Y%m%d")
-    # 定义写入文件名的一部分为当前时间（格式：2359）
-    # logtime = datetime.now().strftime("%H%M")
-
-    # 目录创建
-    new_path = os.path.join(EXPORT_PATH, dir_name)
-    if not os.path.isdir(new_path):
-        os.makedirs(new_path)
-    backup_path = '%s\\%s\\export_conf' % (EXPORT_PATH, dir_name)
-    config_path = '%s\\%s\\modify_conf' % (EXPORT_PATH, dir_name)
-    generate_table = '%s\\%s\\generate_table' % (EXPORT_PATH, dir_name)
-    if not os.path.isdir(backup_path):
-        os.makedirs(backup_path)
-    if not os.path.isdir(config_path):
-        os.makedirs(config_path)
-    if not os.path.isdir(generate_table):
-        os.makedirs(generate_table)
-    time.sleep(1)
-    return backup_path, config_path, generate_table, BASE_PATH, EXPORT_PATH, dir_name
+# 目录创建
+new_path = os.path.join(EXPORT_PATH, dir_name)
+if not os.path.isdir(new_path):
+    os.makedirs(new_path)
+backup_path = '%s\\%s\\export_conf' % (EXPORT_PATH, dir_name)
+config_path = '%s\\%s\\modify_conf' % (EXPORT_PATH, dir_name)
+generate_table = '%s\\%s\\generate_table' % (EXPORT_PATH, dir_name)
+if not os.path.isdir(backup_path):
+    os.makedirs(backup_path)
+if not os.path.isdir(config_path):
+    os.makedirs(config_path)
+if not os.path.isdir(generate_table):
+    os.makedirs(generate_table)
 
 
 # 记录程序执行时间装饰器
@@ -75,7 +63,9 @@ def result_count(func):
         print('\n设备总数 {} 台，成功 {} 台，失败 {} 台.'.format(
             len(hosts),
             len(hosts) - len(failed_hosts), len(failed_hosts)))
-        print(f'\nFailed_hosts list see in : \"{EXPORT_PATH}\\{dir_name}\\result_{dir_name}.log\"\n\nLogfile see in : \"{BASE_PATH}\\nornir.log\"')
+        print(
+            f'\nFailed_hosts list see in : \"{EXPORT_PATH}\\{dir_name}\\result_{dir_name}.log\"\n\nLogfile see in : \"{BASE_PATH}\\nornir.log\"'
+        )
 
         return hosts, failed_hosts, task_desc
 
@@ -99,8 +89,12 @@ def result_write(func):
         global time_str
         # time_str = datetime.now()
         time_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-        with open(os.path.join(EXPORT_PATH + '\\' + dir_name + '\\', f'result_{dir_name}.log'), 'a', encoding="utf-8") as f:
-            log_title = task_desc.center(100, '=') + '\n' + time_str.center(100, '=') + '\n'
+        with open(os.path.join(EXPORT_PATH + '\\' + dir_name + '\\',
+                               f'result_{dir_name}.log'),
+                  'a',
+                  encoding="utf-8") as f:
+            log_title = task_desc.center(100, '=') + '\n' + time_str.center(
+                100, '=') + '\n'
             f.write(log_title)
             f.write(result_count + '\n')
             f.write('\n执行成功设备列表：\n')
@@ -116,6 +110,7 @@ def result_write(func):
         return hosts, failed_hosts, task_desc
 
     return wrapper
+
 
 # 生成用于统计主机的列表
 def create_count_list(nr_obj, failed_hosts):
@@ -137,7 +132,7 @@ def create_count_list(nr_obj, failed_hosts):
         for i in failed_hosts:
             if i == n:
                 failed_hosts_list.append((n, h.hostname))
-    
+
     return hosts_list, failed_hosts_list
 
 
@@ -207,7 +202,8 @@ def excel_style(file_path):
     # 单元格垂直居中
     for row in worksheet:
         for cell in row:
-            cell.alignment = openpyxl.styles.Alignment(horizontal='center',vertical='center')
+            cell.alignment = openpyxl.styles.Alignment(horizontal='center',
+                                                       vertical='center')
 
     # 将所有表头单元格的值转换为大写
     for cell in worksheet[1]:

@@ -4,7 +4,6 @@
 import sys
 import os
 from os import system
-# import subprocess
 import getpass
 
 # import win32com.client
@@ -15,20 +14,21 @@ from termcolor import colored
 
 from lib import comm
 
-backup_path, config_path, generate_table, BASE_PATH, EXPORT_PATH, dir_name = comm.create_path()
 
-
-# 解锁带保护密码的inventory excel 文件
 def unlock_xlsx():
+    """
+    输入保护密码打开 inventory 目录下带保护密码的 excel 文件，并生成一个去除保护密码的副本，最后启动 func_list.py
+    """
+
     retry_times = 0
     while retry_times < 3:
         try:
             # windows platform
-            # password retry 
-            # password = getpass.getpass('输入密码：')
+            # password retry
+            # password = getpass.getpass('输入密码：').strip()
             # # 定义inventory路径
-            # original_file_path = BASE_PATH + "\\inventory\\inventory_protected.xlsx"
-            # target_file_path = BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
+            # original_file_path = comm.BASE_PATH + "\\inventory\\inventory_protected.xlsx"
+            # target_file_path = comm.BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
             # # 创建 Excel 应用程序对象
             # excel = win32com.client.Dispatch("Excel.Application")
             # # 打开需要解锁的 Excel 文件，输入密码
@@ -38,16 +38,15 @@ def unlock_xlsx():
             # # 关闭工作簿和 Excel 应用程序
             # workbook.Close(False)
             # excel.Quit()
-            # os.system(f"python {BASE_PATH}/func/func_list.py")
-            # # subprocess.Popen(['python', ' netops_start.py'])
+            # os.system(f"python {comm.BASE_PATH}/func/func_list.py")
             # sys.exit()
 
-            # ubuntu 22.04 env
+            # ubuntu 22.04 environment
             # password retry
-            password = getpass.getpass('输入密码：')
+            password = getpass.getpass('输入密码：').strip()
             # 定义inventory路径
-            original_file_path = BASE_PATH + "\\inventory\\inventory_protected.xlsx"
-            target_file_path = BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
+            original_file_path = comm.BASE_PATH + "\\inventory\\inventory_protected.xlsx"
+            target_file_path = comm.BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
 
             decrypted = io.BytesIO()
 
@@ -58,9 +57,9 @@ def unlock_xlsx():
 
             df = pd.read_excel(decrypted)
             df.to_excel(target_file_path, index=False)
-            os.system(f"python {BASE_PATH}/func/func_list.py")
-            # subprocess.Popen(['python', ' netops_start.py'])
+            os.system(f"python {comm.BASE_PATH}/func/func_list.py")
             sys.exit()
+
         except Exception:
             retry_times += 1
             if retry_times == 3:
@@ -68,13 +67,15 @@ def unlock_xlsx():
                 break
 
 
-# 确认无保护密码的inventory.xlsx文件已生成
 def StartedTheEngine():
+    """
+    判断无保护密码的inventory.xlsx文件副本已存在，如已存在直接启动 func_list.py，否则调用函数 unlock_xlsx()
+    """
 
-    exists_xlsx = '%s\\inventory\\inventory_unprotected.xlsx' % (BASE_PATH)
+    exists_xlsx = '%s\\inventory\\inventory_unprotected.xlsx' % (
+        comm.BASE_PATH)
     if os.path.exists(exists_xlsx):
-        os.system(f"python {BASE_PATH}/func/func_list.py")
-        # subprocess.Popen(['python', 'netops_start.py'])
+        os.system(f"python {comm.BASE_PATH}/func/func_list.py")
         sys.exit()
     else:
         print('-' * 42)
@@ -82,10 +83,9 @@ def StartedTheEngine():
         unlock_xlsx()
 
 
+# 命令行窗口标题
 system("title Python-NetOps_2.0_beta")
 
-# 开始执行
 if __name__ == "__main__":
 
-    # 执行
     StartedTheEngine()

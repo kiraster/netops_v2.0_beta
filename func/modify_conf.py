@@ -4,30 +4,34 @@ import logging
 
 from nornir.core.task import Result
 from nornir_netmiko import netmiko_send_config
-# from netmiko import ConnectHandler
 from nornir_utils.plugins.tasks.files import write_file
 
-from func_list import config_path
+from lib import comm
 
 
 def modify_conf(task, pbar):
+    """
+    根据资产清单表格中“config”列的命令，进行设备配置并将回显内容分别记录
+    文件名：name_ip_当前时间.txt
+    导出位置：\EXPORT\当天日期\modify_conf
+    """
 
     try:
-        # 获取资产中定义的信息，传参跑task
+        # 获取inventory中定义的信息
         name = task.host.name
         ip = task.host.hostname
-        # 控制台提示信息
-        # sys.stdout.write(f'正在配置，设备：{ip}   ' + '\r')
-        # sys.stdout.flush()
+
         cmds = task.host.get('config').split(',')
-        time_str = datetime.now().strftime("%H%M")
+        time_str = datetime.now().strftime("%H%M%S")
 
         # 方式一，nornir_netmiko
         output = ''
-        config_res = task.run(task=netmiko_send_config, config_commands=cmds, severity_level=logging.DEBUG)
-        # task.host.connections['netmiko']
+        config_res = task.run(task=netmiko_send_config,
+                              config_commands=cmds,
+                              severity_level=logging.DEBUG)
         output += config_res[0].result
-        filepath = config_path + '\\' + '{}_{}_{}.txt'.format(name, ip, time_str)
+        filepath = comm.config_path + '\\' + '{}_{}_{}.txt'.format(
+            name, ip, time_str)
         config_res_write = task.run(task=write_file,
                                     filename=filepath,
                                     content=output,
@@ -47,16 +51,20 @@ def modify_conf(task, pbar):
         output = net_conn.send_config_set(cmds)
         # print(output)
 
-        filepath = config_path + '\\' + '{}_{}_{}.txt'.format(name, ip, time_str)
+        filepath = comm.config_path + '\\' + '{}_{}_{}.txt'.format(name, ip, time_str)
         config_res_write = task.run(task=write_file,
                                     filename=filepath,
                                     content=output,
                                     severity_level=logging.DEBUG)
-                                    '''
+        '''
 
         pbar.update()
         return Result(host=task.host, result=output, changed=True)
 
-    except Exception:
+    except Exception as e:
+        # raise Exception(e)
+        # print(e)
         pbar.update()
-        return Result(host=task.host, result='配置失败：设备：{}，IP：{}'.format(name, ip), failed=True)
+        return Result(host=task.host,
+                      result='配置失败：设备：{}，IP：{}'.format(name, ip),
+                      failed=True)

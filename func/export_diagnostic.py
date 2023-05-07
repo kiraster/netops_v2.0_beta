@@ -2,12 +2,16 @@ from datetime import datetime
 import re
 
 from nornir.core.task import Result
-import netmiko
+
 
 def export_info(task, server_ip, pbar):
+    """
+    上传诊断信息文件，诊断日志文件，日志文件至TFTP服务端
+    不同厂商的名称和命令可能不一致，按需修改
+    """
 
     try:
-        # 获取资产中定义的信息
+        # 获取inventory中定义的信息
         name = task.host.name
         ip = task.host.hostname
         platform = task.host.platform
@@ -21,15 +25,16 @@ def export_info(task, server_ip, pbar):
         if platform == 'hp_comware':
 
             # 保存诊断信息到文件
-            dis_diag_info = [['display diagnostic-information', ']:'], ['y\n', ']:'], ['\n', '>']]
+            dis_diag_info = [['display diagnostic-information', ']:'],
+                             ['y\n', ']:'], ['\n', '>']]
             output += net_conn.send_multiline(dis_diag_info)
             # 提及保存的诊断信息文件名
             pattern = r'\[([^]]*flash:[^]]*\.gz)]'
             diag_info_path = re.search(pattern, output).group(1)
 
-            
             # 保存诊断日志文件
-            output += net_conn.send_command(command_string='diagnostic-logfile save')
+            output += net_conn.send_command(
+                command_string='diagnostic-logfile save')
 
             # 保存日志到文件
             output += net_conn.send_command(command_string='logfile save')
@@ -46,20 +51,25 @@ def export_info(task, server_ip, pbar):
             put_log = f'tftp {server_ip} put flash:/logfile/logfile.log logfile_{time_str}.log'
             output += net_conn.send_command(command_string=put_log)
 
-            pbar.update()  
-            return Result(host=task.host, result='导出诊断信息、诊断日志、日志完成：设备：{}，IP：{}'.format(name, ip))
+            pbar.update()
+            return Result(host=task.host,
+                          result='导出诊断信息、诊断日志、日志完成：设备：{}，IP：{}'.format(
+                              name, ip))
 
         elif platform == 'huawei':
             pass
         elif platform == 'cisco':
             pass
         else:
-            pbar.update()  
-            return Result(host=task.host, result='导出诊断信息、诊断日志、日志失败：设备：{}，IP：{}'.format(name, ip), failed=True)
-
-
+            pbar.update()
+            return Result(host=task.host,
+                          result='导出诊断信息、诊断日志、日志失败：设备：{}，IP：{}'.format(
+                              name, ip),
+                          failed=True)
 
     except Exception as e:
-        # raise Exception(e)
-        pbar.update()        
-        return Result(host=task.host, result='导出诊断信息、诊断日志、日志失败：设备：{}，IP：{}'.format(name, ip), failed=True)
+        raise Exception(e)
+        pbar.update()
+        return Result(host=task.host,
+                      result='导出诊断信息、诊断日志、日志失败：设备：{}，IP：{}'.format(name, ip),
+                      failed=True)
