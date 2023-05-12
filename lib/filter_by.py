@@ -1,5 +1,5 @@
 '''
-IP地址-筛选（格式：192.168.1.1、192.168.1.0/24、192.168.1.1-192.168.1.254）
+IP地址-筛选（格式：192.168.1.1，192.168.1.0/24，192.168.1.1-192.168.1.254）
 '''
 
 import ipaddress
@@ -9,6 +9,7 @@ from termcolor import colored
 
 # IP地址-筛选
 def filter_by_ip(comtent):
+
     ip_list = []
 
     # 对输入的内容以逗号分割进行for循环
@@ -29,7 +30,7 @@ def filter_by_ip(comtent):
                 ipaddress.IPv4Address(end.strip())
                 start_ip = int(ipaddress.IPv4Address(start.strip()))
                 end_ip = int(ipaddress.IPv4Address(end.strip()))
-                for ip in range(start_ip, end_ip+1):
+                for ip in range(start_ip, end_ip + 1):
                     ip = ipaddress.IPv4Address(ip)
                     ip_list.append(str(ip))
             except ValueError as e:
