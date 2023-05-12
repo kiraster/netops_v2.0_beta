@@ -27,7 +27,10 @@ def export_info(task, server_ip, pbar):
             # 保存诊断信息到文件
             dis_diag_info = [['display diagnostic-information', ']:'],
                              ['y\n', ']:'], ['\n', '>']]
-            output += net_conn.send_multiline(dis_diag_info)
+            # 如出现错误 netmiko.exceptions.ReadTimeout: Pattern not detected: '>' in output.
+            # 设置一个等待反应时间，delay_factor=30
+            # time.sleep(10)  # time.sleep的方式设置一个等待反应时间，主要是输入['\n', '>']后设备处理生成诊断文件需要时间
+            output += net_conn.send_multiline(dis_diag_info, delay_factor=30)
             # 提及保存的诊断信息文件名
             pattern = r'\[([^]]*flash:[^]]*\.gz)]'
             diag_info_path = re.search(pattern, output).group(1)
