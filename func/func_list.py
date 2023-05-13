@@ -488,6 +488,33 @@ def export_diagnostic_logfile():
     return hosts_list, failed_hosts_list, task_desc
 
 
+# 12、检查当前运行配置与已保存配置是否一致
+@comm.timer
+@comm.result_count
+@comm.result_write
+def check_diff():
+
+    pbar = tqdm(total=len(nr.inventory.hosts),
+                desc="Running tasks on devices",
+                unit="device(s)",
+                colour='green')
+
+    import check_diff
+
+    task_desc = 'TASK: Check Diff'
+    results = nr.run(task=check_diff.check_diff,
+                     pbar=pbar,
+                     name=task_desc,
+                     on_failed=True)
+    pbar.close()
+
+    # Nornir task 任务执行失败的主机
+    failed_hosts = list(results.failed_hosts.keys())
+    hosts_list, failed_hosts_list = comm.create_count_list(nr, failed_hosts)
+    print_result(results)
+    return hosts_list, failed_hosts_list, task_desc
+
+
 # 0、退出
 def goodbye():
     exit()
@@ -514,6 +541,7 @@ func_dic = {
     '9': save_conf,
     '10': itemized_list,
     '11': export_diagnostic_logfile,
+    '12': check_diff,
     '0': goodbye,
 }
 
@@ -535,6 +563,7 @@ def run():
         9、批量保存配置
         10、查看设备清单
         11、导出诊断信息和日志（TFTP）
+        12、检查当前运行配置与已保存配置是否一致
         0、退出
             '''.format(welcome_str))
         print('-' * 42)
