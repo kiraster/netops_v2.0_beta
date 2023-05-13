@@ -27,12 +27,15 @@ if not os.path.isdir(new_path):
 backup_path = '%s\\%s\\export_conf' % (EXPORT_PATH, dir_name)
 config_path = '%s\\%s\\modify_conf' % (EXPORT_PATH, dir_name)
 generate_table = '%s\\%s\\generate_table' % (EXPORT_PATH, dir_name)
+diff_config_path = '%s\\%s\\diff_conf' % (EXPORT_PATH, dir_name)
 if not os.path.isdir(backup_path):
     os.makedirs(backup_path)
 if not os.path.isdir(config_path):
     os.makedirs(config_path)
 if not os.path.isdir(generate_table):
     os.makedirs(generate_table)
+if not os.path.isdir(diff_config_path):
+    os.makedirs(diff_config_path)
 
 
 # 记录程序执行时间装饰器
