@@ -8,7 +8,7 @@
 
 更多详细介绍，移步Blog：https://kiraster.github.io/posts/9571d5ee.html
 
-![ScreenCaputure230506035629](https://s2.loli.net/2023/05/06/sWZdHkmLDlqevxB.jpg)
+![ScreenCaputure230514021616](https://s2.loli.net/2023/05/14/mVBfGUNXKxCsu37.jpg)
 
 ## 测试环境
 
@@ -30,7 +30,7 @@
 - HCL 5.7.2
 - DeviceModel：H3C S5820V2-54QS-GE
 
-## Topology
+### Topology
 
 ![lab_test](https://s2.loli.net/2023/05/05/L7nI9fTp3zEk6Rq.png)
 
@@ -69,6 +69,8 @@
    - 根据加载的设备清单，列出['name', 'ip', 'platform', 'model', 'device_type', 'area', 'location', 'version', 'sn']等内容
 11. 导出诊断信息和日志（TFTP）
     - 根据`nr.filter(hostname=device_ip)`过滤单台设备，对设备的诊断信息文件，诊断日志文件和日志文件上传到 TFTP 服务器
+12. 检查当前运行配置与已保存配置是否一致
+    - 根据加载的设备清单，读取ssh登陆信息登陆设备，执行命令获取设备当前运行配置与已保存配置，使用Differ类计算差异；对设备当前运行配置与已保存配置不一致的，记录变化写入到`EXPORT\当天日期\diff_conf`文件夹下(格式：name + ip + 当前时间.txt)；当前运行配置与已保存配置不一致的设备列表记录在一个report_conf_diff文件；运行结果记录在`EXPORT\当天日期\result_当天日期.log`文件
 
 
 ## 说明：
@@ -107,6 +109,7 @@
 9、批量保存配置
 10、查看设备清单
 11、导出诊断信息和日志（TFTP）
+12、检查当前运行配置与已保存配置是否一致
 0、退出
 ```
 
@@ -222,3 +225,8 @@
 
 1. 设备处理生成诊断文件需要反应时间，添加`delay_factor=30`
 2. `main`分支功能同步更新到`ubuntu-branch`分支
+
+## 20230514 添加 检查当前运行配置与已保存配置是否一致
+
+1. 使用Differ类计算当前运行配置与已保存配置差异
+2. 写入文件记录差异
