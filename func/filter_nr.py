@@ -101,10 +101,10 @@ def run_filter():
         if choice not in func_dic:
             print('没有该编号对应的功能！')
             continue
-        if choice == '0':
+        elif choice == '0':
             goodbye()
-
-        nr_yaml_path = os.path.normpath(os.path.join(comm.BASE_PATH, 'nornir.yaml'))
-        nr = InitNornir(config_file=nr_yaml_path)
-        res = func_dic.get(choice)(nr)
-        return res
+        else:
+            nr_yaml_path = os.path.normpath(os.path.join(comm.BASE_PATH, 'nornir.yaml'))
+            nr = InitNornir(config_file=nr_yaml_path)
+            res = func_dic.get(choice)(nr)
+            return res
