@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 import sys
 import logging
 
@@ -30,10 +31,13 @@ def modify_conf(task, pbar):
                               config_commands=cmds,
                               severity_level=logging.DEBUG)
         output += config_res[0].result
-        filepath = comm.config_path + '\\' + '{}_{}_{}.txt'.format(
-            name, ip, time_str)
+        # filepath = comm.config_path + '\\' + '{}_{}_{}.txt'.format(
+        #     name, ip, time_str)
+        file_path = os.path.normpath(
+            os.path.join(comm.config_path,
+                         '{}_{}_{}.txt'.format(name, ip, time_str)))
         config_res_write = task.run(task=write_file,
-                                    filename=filepath,
+                                    filename=file_path,
                                     content=output,
                                     severity_level=logging.DEBUG)
 
@@ -51,9 +55,11 @@ def modify_conf(task, pbar):
         output = net_conn.send_config_set(cmds)
         # print(output)
 
-        filepath = comm.config_path + '\\' + '{}_{}_{}.txt'.format(name, ip, time_str)
+        file_path = os.path.normpath(
+            os.path.join(comm.config_path,
+                         '{}_{}_{}.txt'.format(name, ip, time_str)))
         config_res_write = task.run(task=write_file,
-                                    filename=filepath,
+                                    filename=file_path,
                                     content=output,
                                     severity_level=logging.DEBUG)
         '''

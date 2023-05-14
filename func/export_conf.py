@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 import sys
 import logging
 
@@ -33,8 +34,11 @@ def export_conf(task, pbar):
                                    severity_level=logging.DEBUG)
             output += display_res[0].result
 
-        file_path = comm.backup_path + '\\' + '{}_{}_{}.txt'.format(
-            name, ip, time_str)
+        # file_path = comm.backup_path + '\\' + '{}_{}_{}.txt'.format(
+        #     name, ip, time_str)
+        file_path = os.path.normpath(
+            os.path.join(comm.backup_path,
+                         '{}_{}_{}.txt'.format(name, ip, time_str)))
 
         display_res_write = task.run(task=write_file,
                                      filename=file_path,

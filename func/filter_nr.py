@@ -2,6 +2,7 @@
 筛选返回给上一层一个nr对象
 '''
 import sys
+import os
 
 from nornir import InitNornir
 from nornir.core.filter import F
@@ -36,7 +37,6 @@ def filter_by_ip(nr):
 # 2、平台-筛选
 def filter_by_platform(nr):
 
-    nr = InitNornir(config_file=comm.BASE_PATH + "\\nornir.yaml")
     comtent = input('输入平台：').strip()
     nr = nr.filter(platform=comtent)
     return nr
@@ -45,7 +45,6 @@ def filter_by_platform(nr):
 # 3、设备型号-筛选
 def filter_by_model(nr):
 
-    nr = InitNornir(config_file=comm.BASE_PATH + "\\nornir.yaml")
     comtent = input('输入设备型号：').strip()
     nr = nr.filter(model=comtent)
     return nr
@@ -54,7 +53,6 @@ def filter_by_model(nr):
 # 4、区域-筛选
 def filter_by_area(nr):
 
-    nr = InitNornir(config_file=comm.BASE_PATH + "\\nornir.yaml")
     comtent = input('输入区域：').strip()
     nr = nr.filter(area=comtent)
     return nr
@@ -63,7 +61,6 @@ def filter_by_area(nr):
 # 5、组合筛选（高级）
 def filter_by_adv(nr):
 
-    nr = InitNornir(config_file=comm.BASE_PATH + "\\nornir.yaml")
     comtent = input('F对象（~取反 ），& 和 | 执行 AND 和 OR 运算组合筛选：').strip()
     # F(hostname='172.31.100.20') | F(area='JCW')
     nr = eval(f'nr.filter({comtent})')
@@ -107,6 +104,7 @@ def run_filter():
         if choice == '0':
             goodbye()
 
-        nr = InitNornir(config_file=comm.BASE_PATH + "\\nornir.yaml")
+        nr_yaml_path = os.path.normpath(os.path.join(comm.BASE_PATH, 'nornir.yaml'))
+        nr = InitNornir(config_file=nr_yaml_path)
         res = func_dic.get(choice)(nr)
         return res

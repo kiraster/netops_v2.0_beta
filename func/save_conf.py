@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 import sys
 import logging
 
@@ -50,8 +51,11 @@ def save_conf(task, pbar):
 
         # output = save_res_write(task, name, ip, time_str, save_res)
         output = save_res[0].result
-        file_path = comm.config_path + '\\' + '{}_{}_{}.txt'.format(
-            name, ip, time_str)
+        # file_path = comm.config_path + '\\' + '{}_{}_{}.txt'.format(
+        #     name, ip, time_str)
+        file_path = os.path.normpath(
+            os.path.join(comm.config_path,
+                         '{}_{}_{}.txt'.format(name, ip, time_str)))
         display_res_write = task.run(task=write_file,
                                      filename=file_path,
                                      content=output,

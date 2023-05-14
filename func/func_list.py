@@ -22,7 +22,8 @@ from lib import comm
 welcome_str = '`LIFE IS A FUCKING MOVIE`'
 
 # 初始化创建一个 Nornir 对象
-nr = InitNornir(config_file=comm.BASE_PATH + "\\nornir.yaml")
+nr_yaml_path = os.path.normpath(os.path.join(comm.BASE_PATH, 'nornir.yaml'))
+nr = InitNornir(config_file=nr_yaml_path)
 
 
 # 1、批量备份配置
@@ -259,7 +260,9 @@ def get_port_mac():
 
     global mac_file_path
 
-    mac_file_path = comm.generate_table + '\\' + time_str + '_MAC地址表' + '.xlsx'
+    # mac_file_path = comm.generate_table + '\\' + time_str + '_MAC地址表' + '.xlsx'
+    mac_file_path = os.path.normpath(
+        os.path.join(comm.generate_table, f'{time_str}_MAC地址表.xlsx'))
     comm.concat_dataframe(results, mac_file_path)
     bar.next()
     bar.finish()
@@ -321,7 +324,9 @@ def snmp_polling():
     # 处理表格数据
     bar = Bar('End of summer:', width=67, max=1, suffix='%(index)d/%(max)d')
     time_str = datetime.now().strftime('%Y%m%d_%H%M%S')
-    file_path = comm.generate_table + '\\' + time_str + '_SNMP轮询结果表' + '.xlsx'
+    # file_path = comm.generate_table + '\\' + time_str + '_SNMP轮询结果表' + '.xlsx'
+    file_path = os.path.normpath(
+        os.path.join(comm.generate_table, f'{time_str}_SNMP轮询结果表.xlsx'))
     comm.concat_dataframe(results, file_path)
     bar.next()
     bar.finish()
@@ -523,10 +528,10 @@ def goodbye():
 # 程序退出时自动清除inventory_unprotected.xlsx文件
 @atexit.register
 def del_unprotected_xlsx():
-    target_file_path = comm.BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
+    # target_file_path = comm.BASE_PATH + "\\inventory\\inventory_unprotected.xlsx"
+    target_file_path = os.path.normpath(os.path.join(comm.BASE_PATH, 'inventory', 'inventory_unprotected.xlsx'))
     # 以下操作是直接删除，不是移动到回收站
     os.remove(target_file_path)
-
 
 # 创建函数功能字典
 func_dic = {

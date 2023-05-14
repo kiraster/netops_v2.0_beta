@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 import sys
 import logging
 import difflib
@@ -80,8 +81,12 @@ def check_diff(task, pbar):
                     new_line = line.rstrip()
                     output += new_line + '\n'
 
-            file_path = comm.diff_config_path + '\\' + '{}_{}_{}.txt'.format(
-                name, ip, time_str)
+            # file_path = comm.diff_config_path + '\\' + '{}_{}_{}.txt'.format(
+            #     name, ip, time_str)
+
+            file_path = os.path.normpath(
+                os.path.join(comm.diff_config_path,
+                             '{}_{}_{}.txt'.format(name, ip, time_str)))
 
             display_res_write = task.run(task=write_file,
                                          filename=file_path,
@@ -91,7 +96,9 @@ def check_diff(task, pbar):
             pbar.update()
 
             # 定义一个report文件路径，记录当前运行配置与已保存配置不一致的设备列表
-            report_path = comm.diff_config_path + '\\' + 'report_conf_diff.log'
+            # report_path = comm.diff_config_path + '\\' + 'report_conf_diff.log'
+            report_path = os.path.normpath(
+                os.path.join(comm.diff_config_path, 'report_conf_diff.log'))
             task.run(task=write_file,
                      filename=report_path,
                      content='Device: {}   IP: {}\n'.format(name, ip),
@@ -104,7 +111,7 @@ def check_diff(task, pbar):
                           changed=True)
 
     except Exception as e:
-        # raise Exception(e)
+        raise Exception(e)
         # print(e)
         pbar.update()
         return Result(host=task.host,

@@ -24,10 +24,20 @@ dir_name = datetime.now().strftime("%Y%m%d")
 new_path = os.path.join(EXPORT_PATH, dir_name)
 if not os.path.isdir(new_path):
     os.makedirs(new_path)
-backup_path = '%s\\%s\\export_conf' % (EXPORT_PATH, dir_name)
-config_path = '%s\\%s\\modify_conf' % (EXPORT_PATH, dir_name)
-generate_table = '%s\\%s\\generate_table' % (EXPORT_PATH, dir_name)
-diff_config_path = '%s\\%s\\diff_conf' % (EXPORT_PATH, dir_name)
+# backup_path = '%s\\%s\\export_conf' % (EXPORT_PATH, dir_name)
+# config_path = '%s\\%s\\modify_conf' % (EXPORT_PATH, dir_name)
+# generate_table = '%s\\%s\\generate_table' % (EXPORT_PATH, dir_name)
+# diff_config_path = '%s\\%s\\diff_conf' % (EXPORT_PATH, dir_name)
+
+backup_path = os.path.normpath(
+    os.path.join(EXPORT_PATH, dir_name, 'export_conf'))
+config_path = os.path.normpath(
+    os.path.join(EXPORT_PATH, dir_name, 'modify_conf'))
+generate_table = os.path.normpath(
+    os.path.join(EXPORT_PATH, dir_name, 'generate_table'))
+diff_config_path = os.path.normpath(
+    os.path.join(EXPORT_PATH, dir_name, 'diff_conf'))
+
 if not os.path.isdir(backup_path):
     os.makedirs(backup_path)
 if not os.path.isdir(config_path):
@@ -66,8 +76,11 @@ def result_count(func):
         print('\n设备总数 {} 台，成功 {} 台，失败 {} 台.'.format(
             len(hosts),
             len(hosts) - len(failed_hosts), len(failed_hosts)))
+        result_path = os.path.normpath(
+            os.path.join(EXPORT_PATH, dir_name, f'result_{dir_name}.log'))
+        log_path = os.path.normpath(os.path.join(EXPORT_PATH, 'nornir.log'))
         print(
-            f'\nFailed_hosts list see in : \"{EXPORT_PATH}\\{dir_name}\\result_{dir_name}.log\"\n\nLogfile see in : \"{BASE_PATH}\\nornir.log\"'
+            f'\nFailed_hosts list see in : \"{result_path}\"\n\nLogfile see in : \"{log_path}\"'
         )
 
         return hosts, failed_hosts, task_desc
@@ -92,10 +105,11 @@ def result_write(func):
         global time_str
         # time_str = datetime.now()
         time_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-        with open(os.path.join(EXPORT_PATH + '\\' + dir_name + '\\',
-                               f'result_{dir_name}.log'),
-                  'a',
-                  encoding="utf-8") as f:
+
+        result_path = os.path.normpath(
+            os.path.join(EXPORT_PATH, dir_name, f'result_{dir_name}.log'))
+
+        with open(result_path, 'a', encoding="utf-8") as f:
             log_title = task_desc.center(100, '=') + '\n' + time_str.center(
                 100, '=') + '\n'
             f.write(log_title)
