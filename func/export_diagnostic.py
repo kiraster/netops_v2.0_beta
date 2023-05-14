@@ -1,5 +1,6 @@
 from datetime import datetime
 import re
+import time
 
 from nornir.core.task import Result
 
