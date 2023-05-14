@@ -4,7 +4,9 @@
 
 `main`分支是在windows平台下运行的脚本
 
-`ubuntu-branch`分支是在ubuntu server下运行的脚本（其他linux发行版，应该也可以）
+> ~~`ubuntu-branch`分支是在ubuntu server下运行的脚本（其他linux发行版，应该也可以）~~
+>
+> 由于使用`os.path.normpath()`函数来规范化路径，修改后代码在Windows和Ubuntu系统中都能正确运行，**暂停更新**`ubuntu-branch`分支
 
 更多详细介绍，移步Blog：https://kiraster.github.io/posts/9571d5ee.html
 
