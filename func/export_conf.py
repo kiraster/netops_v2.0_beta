@@ -28,7 +28,7 @@ def export_conf(task, pbar):
         output = ''
 
         for cmd in cmds:
-            output += '=' * 100 + '\n' + cmd.center(100, '=') + '\n'
+            output +=  '\n' + '=' * 100 + '\n' + cmd.center(100, '=') + '\n'
             display_res = task.run(task=netmiko_send_command,
                                    command_string=cmd,
                                    severity_level=logging.DEBUG)
