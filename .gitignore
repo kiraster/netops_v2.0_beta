@@ -11,6 +11,7 @@ Experimental/
 EXPORT/
 inventory/*
 !inventory_protected.xlsx
+.idea/
 
 .Python
 build/
